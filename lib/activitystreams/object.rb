@@ -17,5 +17,11 @@ module ActivityStreams
       :updated,
       :url
     )
+
+    def initialize(attributes = {})
+      super do
+        # TODO:
+      end
+    end
   end
 end

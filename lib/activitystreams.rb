@@ -18,5 +18,11 @@ module ActivityStreams
 end
 
 require 'activitystreams/activity'
+require 'activitystreams/collection'
+require 'activitystreams/media_link'
 require 'activitystreams/object'
 require 'activitystreams/verb'
+
+module ActivityStreams
+  p 1.is_a?(Object)
+end

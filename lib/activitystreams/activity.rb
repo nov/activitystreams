@@ -16,8 +16,6 @@ module ActivityStreams
       :url
     )
 
-    
-
     def initialize(attributes = {})
       super do
         @verb ||= Verb::Post.new

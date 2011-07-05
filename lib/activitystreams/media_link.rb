@@ -7,5 +7,11 @@ module ActivityStreams
       :height,
       :width
     )
+
+    def initialize(attributes = {})
+      super do
+        # TODO: validate format
+      end
+    end
   end
 end
