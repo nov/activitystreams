@@ -4,7 +4,14 @@ module ActivityStreams
 
     def initialize(attributes = {})
       super do
-        # TODO:
+        @url = to_iri @url
+      end
+    end
+
+    def validate_attributes!
+      super
+      if items.blank? && url.blank?
+        raise AttrMissing.new('Either "items" or "url" is required')
       end
     end
   end

@@ -19,22 +19,20 @@ module ActivityStreams
     def initialize(attributes = {})
       super do
         @verb ||= Verb::Post.new
+        @id  = to_iri @id
+        @url = to_iri @url
+        @published = to_time @published
+        @updated   = to_time @updated
       end
-
-      # TODO:
-      # Validate class of each attributes.
-      # ActiveModel might help, but make sure it works with Rails 2.3.
-
-      # TODO: Force date-time attributes follow RFC3339
     end
 
-    def as_json(options = {})
-      {
-        :actor  => actor,
-        :verb   => verb,
-        :object => object,
-        :target => target
-      }
+    def validate_attributes!
+      super
+      [:actor, :object, :target, :provider, :generator].each do |_attr_|
+        validate_attribute! _attr_, Object
+      end
+      validate_attribute! :verb, Verb
+      validate_attribute! :icon, MediaLink
     end
   end
 end
