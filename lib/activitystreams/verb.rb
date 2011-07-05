@@ -1,11 +1,18 @@
 module ActivityStreams
   class Verb < Base
-    def verb
-      if self.class.superclass == Verb
-        self.class.name.split('::').last.underscore.dasherize.to_sym
+    attr_required :verb
+
+    def initialize
+      _verb_ = if self.class.superclass == Verb
+        self.class.name.demodulize.underscore.dasherize
       else
-        :post
+        'post'
       end
+      super :verb => _verb_
+    end
+
+    def validate_attributes!
+      to_iri :verb
     end
 
     def as_json(options = {})

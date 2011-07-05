@@ -44,4 +44,13 @@ describe ActivityStreams::Object do
       expect { ActivityStreams::Object.new valid_attributes }.should_not raise_error AttrRequired::AttrMissing
     end
   end
+
+  describe '#as_json' do
+    subject { ActivityStreams::Object.new(:display_name => 'Nov').as_json }
+    it do
+      should == {
+        :displayName => 'Nov'
+      }
+    end
+  end
 end

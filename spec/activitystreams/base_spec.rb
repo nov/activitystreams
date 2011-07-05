@@ -30,9 +30,9 @@ describe ActivityStreams::Base do
       SubClass.new(
         :required => time,
         :optional => iri
-      )
+      ).as_json
     end
-    its(:as_json) do
+    it do
       should == {
         :required => time.iso8601,
         :optional => iri.to_s

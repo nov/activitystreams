@@ -40,8 +40,8 @@ describe ActivityStreams::MediaLink do
 
   describe '#as_json' do
     let(:attributes) { required_attributes.merge(optional_attributes) }
-    subject { ActivityStreams::MediaLink.new required_attributes.merge(optional_attributes) }
-    its(:as_json) do
+    subject { ActivityStreams::MediaLink.new(required_attributes.merge(optional_attributes)).as_json }
+    it do
       should == {
         :url      => required_attributes[:url],
         :duration => optional_attributes[:duration].to_i,

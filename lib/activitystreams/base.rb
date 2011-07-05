@@ -17,7 +17,7 @@ module ActivityStreams
       (required_attributes + optional_attributes).inject({}) do |hash, _attr_|
         _value_ = self.send _attr_
         hash.merge!(
-          _attr_ => case _value_
+          _attr_.to_s.camelize(:lower).to_sym => case _value_
           when Symbol, Addressable::URI
             _value_.to_s
           when Time

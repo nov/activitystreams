@@ -18,6 +18,14 @@ module ActivityStreams
       :url
     )
 
+    def initialize(attributes = {})
+      _type_ = if self.class.superclass == Object
+        self.class.name.demodulize.underscore
+      end
+      attributes = {:type => _type_}.merge(attributes)
+      super attributes
+    end
+
     def validate_attributes!
       super
       [:id, :type, :url].each do |_attr_|
@@ -35,4 +43,8 @@ module ActivityStreams
       # TODO: display_name MUST NOT include HTML
     end
   end
+end
+
+Dir[File.dirname(__FILE__) + '/object/*.rb'].each do |file| 
+  require file
 end
