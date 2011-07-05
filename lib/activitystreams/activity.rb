@@ -17,17 +17,18 @@ module ActivityStreams
     )
 
     def initialize(attributes = {})
-      super do
-        @verb ||= Verb::Post.new
-        @id  = to_iri @id
-        @url = to_iri @url
-        @published = to_time @published
-        @updated   = to_time @updated
-      end
+      attributes[:verb] ||= Verb.new
+      super
     end
 
     def validate_attributes!
       super
+      [:id, :uri].each do |_attr_|
+        to_iri _attr_
+      end
+      [:published, :updated].each do |_attr_|
+        to_time _attr_
+      end
       [:actor, :object, :target, :provider, :generator].each do |_attr_|
         validate_attribute! _attr_, Object
       end

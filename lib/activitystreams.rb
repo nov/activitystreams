@@ -4,7 +4,7 @@ require 'attr_required'
 require 'attr_optional'
 require 'addressable/uri'
 
-require 'activitystreams/util'
+require 'activitystreams/validator'
 require 'activitystreams/exception'
 require 'activitystreams/base'
 require 'activitystreams/activity'

@@ -8,12 +8,11 @@ module ActivityStreams
       :width
     )
 
-    def initialize(attributes = {})
-      super do
-        @url      = to_iri @url
-        @duration = to_integer @duration
-        @height   = to_integer @height
-        @width    = to_integer @width
+    def validate_attributes!
+      super
+      to_iri :url
+      [:duration, :height, :width].each do |_attr_|
+        to_integer _attr_
       end
     end
   end

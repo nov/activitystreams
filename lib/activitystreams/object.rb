@@ -18,9 +18,19 @@ module ActivityStreams
       :url
     )
 
-    def initialize(attributes = {})
-      super do
-        # TODO:
+    def validate_attributes!
+      super
+      [:id, :type, :url].each do |_attr_|
+        to_iri _attr_
+      end
+      [:published, :updated].each do |_attr_|
+        to_time _attr_
+      end
+      validate_attribute! :author, Object
+      validate_attribute! :image, MediaLink
+      validate_attribute! :attachments, Object, :arrayed!
+      [:downstream_duplicates, :upstream_duplicates].each do |_attr_|
+        to_iri _attr_, :arrayed!
       end
     end
   end

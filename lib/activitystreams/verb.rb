@@ -3,9 +3,8 @@ module ActivityStreams
     attr_required :verb
 
     def initialize(attributes = {})
-      super do
-        @verb ||= :post
-      end
+      attributes[:verb] ||= :post
+      super
     end
 
     def as_json(options = {})

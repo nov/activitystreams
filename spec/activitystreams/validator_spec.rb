@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe ActivityStreams::Util do
+describe ActivityStreams::Validator do
   class Foo
-    include ActivityStreams::Util
+    include ActivityStreams::Validator
     attr_accessor :foo
 
     def initialize(foo = nil)
@@ -16,6 +16,7 @@ describe ActivityStreams::Util do
         expect do
           Foo.new.validate_attribute!(:foo, String)
           Foo.new('').validate_attribute! :foo, String
+          Foo.new([]).validate_attribute! :foo, String
         end.should_not raise_error
       end
     end
@@ -28,14 +29,34 @@ describe ActivityStreams::Util do
 
     context 'when invalid' do
       it do
-        expect { Foo.new('foo').validate_attribute! :foo, Time }.should raise_error ActivityStreams::InvalidAttribute
+        expect { Foo.new('foo').validate_attribute! :foo, Time }.should raise_error(
+          ActivityStreams::InvalidAttribute,
+          'foo should be a Time'
+        )
+      end
+    end
+
+    context 'when arrayed' do
+      context 'when valid' do
+        it do
+          expect { Foo.new([Time.now]).validate_attribute! :foo, Time, :arrayed }.should_not raise_error
+        end
+      end
+
+      context 'when invalid' do
+        it do
+          expect { Foo.new(['foo']).validate_attribute! :foo, Time, :arrayed }.should raise_error(
+            ActivityStreams::InvalidAttribute,
+            'foo should be an array of Time'
+          )
+        end
       end
     end
   end
 
   describe '#to_iri' do
     let(:foo) { Foo.new(iri) }
-    let(:to_iri) { foo.to_iri foo.foo }
+    let(:to_iri) { foo.to_iri :foo }
     subject { to_iri }
 
     context 'when nil' do
@@ -43,22 +64,49 @@ describe ActivityStreams::Util do
       it { should be_nil }
     end
 
-    context 'when valid IRI' do
+    context 'when valid' do
       let(:iri) { 'activitystrea.ms,2011/foo' }
       it { should be_a Addressable::URI }
     end
 
-    context 'when invalid IRI' do
+    context 'when invalid' do
       let(:iri) { 'http:' }
       it do
-        expect { to_iri }.should raise_error ActivityStreams::InvalidAttribute
+        expect { to_iri }.should raise_error(
+          ActivityStreams::InvalidAttribute,
+          'foo should be a valid IRI'
+        )
+      end
+    end
+
+    context 'when arrayed' do
+      let(:to_iri) { foo.to_iri :foo, :arrayed! }
+
+      context 'when valid' do
+        let(:iri) { ['activitystrea.ms,2011/foo'] }
+        it { should be_a Array }
+        it 'should be an array of Addressable::URI' do
+          to_iri.each do |iri|
+            iri.should be_a Addressable::URI
+          end
+        end
+      end
+
+      context 'when valid' do
+        let(:iri) { ['http:'] }
+        it do
+          expect { to_iri }.should raise_error(
+            ActivityStreams::InvalidAttribute,
+            'foo should be an array of valid IRI'
+          )
+        end
       end
     end
   end
 
   describe '#to_time' do
     let(:foo) { Foo.new(time) }
-    let(:to_time) { foo.to_time foo.foo }
+    let(:to_time) { foo.to_time :foo }
     subject { to_time }
 
     context 'when nil' do
@@ -81,7 +129,7 @@ describe ActivityStreams::Util do
 
   describe '#to_integer' do
     let(:foo) { Foo.new(integer) }
-    let(:to_integer) { foo.to_integer foo.foo }
+    let(:to_integer) { foo.to_integer :foo }
     subject { to_integer }
 
     context 'when nil' do

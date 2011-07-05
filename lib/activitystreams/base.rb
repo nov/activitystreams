@@ -1,12 +1,11 @@
 module ActivityStreams
   class Base
-    include AttrRequired, AttrOptional, Util
+    include AttrRequired, AttrOptional, Validator
 
-    def initialize(attributes = {}, &block)
+    def initialize(attributes = {})
       (required_attributes + optional_attributes).each do |_attr_|
         self.send :"#{_attr_}=", attributes[_attr_]
       end
-      yield if block_given?
       validate_attributes!
     end
 
@@ -27,6 +26,8 @@ module ActivityStreams
             _value_
           end
         )
+      end.delete_if do |k,v|
+        v.blank?
       end
     end
   end
