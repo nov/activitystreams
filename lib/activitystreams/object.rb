@@ -32,6 +32,7 @@ module ActivityStreams
       [:downstream_duplicates, :upstream_duplicates].each do |_attr_|
         to_iri _attr_, :arrayed!
       end
+      # TODO: display_name MUST NOT include HTML
     end
   end
 end

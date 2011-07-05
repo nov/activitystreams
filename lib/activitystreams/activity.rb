@@ -23,7 +23,7 @@ module ActivityStreams
 
     def validate_attributes!
       super
-      [:id, :uri].each do |_attr_|
+      [:id, :url].each do |_attr_|
         to_iri _attr_
       end
       [:published, :updated].each do |_attr_|

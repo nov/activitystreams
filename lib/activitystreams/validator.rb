@@ -17,7 +17,7 @@ module ActivityStreams
     def to_iri(attribute, arrayed = false)
       _value_ = self.send attribute
       _value_ = if arrayed
-        _value_.collect do |_v_|
+        Array(_value_).collect do |_v_|
           Addressable::URI.parse(_v_)
         end
       else
