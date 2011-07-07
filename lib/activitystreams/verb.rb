@@ -12,12 +12,14 @@ module ActivityStreams
     end
 
     def validate_attributes!
+      super
       to_iri :verb
     end
 
-    def as_json(options = {})
+    def to_s(options = {})
       verb.to_s
     end
+    alias_method :as_json, :to_s
   end
 end
 

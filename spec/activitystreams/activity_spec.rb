@@ -48,4 +48,35 @@ describe ActivityStreams::Activity do
       expect { ActivityStreams::Activity.new valid_attributes }.should_not raise_error AttrRequired::AttrMissing
     end
   end
+
+  describe '#recommended_verb?' do
+    let(:activity) do
+      ActivityStreams::Activity.new valid_attributes.merge(
+        :object => object,
+        :verb => verb
+      )
+    end
+
+    context 'when object is Bookmark' do
+      let(:object) { ActivityStreams::Object::Bookmark.new }
+
+      context 'when recommended verb used' do
+        let(:verb) { ActivityStreams::Verb.new }
+        it 'should not warn' do
+          ActivityStreams.logger.should_not_receive(:warn)
+          activity
+        end
+      end
+
+      context 'otherwise' do
+        let(:verb) { ActivityStreams::Verb::Add.new }
+        it 'should warn' do
+          ActivityStreams.logger.should_receive(:warn).with(
+            "\"#{verb.to_s}\" is not recommended. \"#{object.recommended_verbs.collect(&:to_s).join('", "')}\" are recommended."
+          )
+          activity
+        end
+      end
+    end
+  end
 end

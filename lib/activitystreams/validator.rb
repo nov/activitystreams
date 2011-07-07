@@ -43,12 +43,22 @@ module ActivityStreams
       end
       self.send :"#{attribute}=", _value_
     rescue ArgumentError, NoMethodError => e
-      raise InvalidAttribute.new("#{attribute} ")
+      raise InvalidAttribute.new("#{attribute} should be a valid date-time")
     end
 
     def to_integer(attribute)
       _value_ = self.send attribute
       self.send :"#{attribute}=", _value_.try(:to_i)
+    end
+
+    def to_float(attribute, options = {})
+      _value_ = self.send attribute
+      return unless _value_
+      _value_ = BigDecimal.new(_value_.to_s).round(options[:precision]) if options[:precision]
+      if options[:range] && !options[:range].include?(_value_)
+        raise InvalidAttribute.new("#{attribute} should be within #{options[:range]}")
+      end
+      self.send :"#{attribute}=", _value_.to_f
     end
   end
 end

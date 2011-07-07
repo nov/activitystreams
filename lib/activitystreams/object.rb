@@ -1,5 +1,7 @@
 module ActivityStreams
   class Object < Base
+    include ExtProperties
+
     attr_optional(
       # SHOULD
       :id,
@@ -11,7 +13,7 @@ module ActivityStreams
       :content,
       :display_name,
       :image,
-      :type,
+      :object_type,
       :published,
       :summary,
       :updated,
@@ -22,13 +24,13 @@ module ActivityStreams
       _type_ = if self.class.superclass == Object
         self.class.name.demodulize.underscore
       end
-      attributes = {:type => _type_}.merge(attributes)
+      attributes = {:object_type => _type_}.merge(attributes)
       super attributes
     end
 
     def validate_attributes!
       super
-      [:id, :type, :url].each do |_attr_|
+      [:id, :object_type, :url].each do |_attr_|
         to_iri _attr_
       end
       [:published, :updated].each do |_attr_|
@@ -41,6 +43,15 @@ module ActivityStreams
         to_iri _attr_, :arrayed!
       end
       # TODO: display_name MUST NOT include HTML
+    end
+
+    def recommended_verbs
+      self.class.recommended_verbs
+    end
+
+    def self.recommended_verbs(*verbs)
+      @recommended_verbs ||= []
+      @recommended_verbs += verbs
     end
   end
 end
