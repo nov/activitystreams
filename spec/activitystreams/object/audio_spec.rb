@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ActivityStreams::Object::Audio do
   context 'when invalid attributes given' do
     let(:invalid_attributes) do
-      {:stream => 'http://smart.fm/channels/awesome'}
+      {:stream => 'invalid'}
     end
 
     it do

@@ -18,8 +18,8 @@ module ActivityStreams
 
     def validate_attributes!
       super
-      validate_attribute :position, GeoLocation
-      validate_attribute :address,  Address
+      validate_attribute! :position, GeoLocation
+      validate_attribute! :address,  Address
     end
   end
 end

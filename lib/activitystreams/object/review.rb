@@ -10,6 +10,7 @@ module ActivityStreams
     def as_json
       hash = super
       hash[:rating] = hash.delete(:_rating_)
+      hash
     end
   end
 end

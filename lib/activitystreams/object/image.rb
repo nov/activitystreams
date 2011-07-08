@@ -4,7 +4,7 @@ module ActivityStreams
 
     def validate_attributes!
       super
-      validate_attribute :full_image, MediaLink
+      validate_attribute! :full_image, MediaLink
     end
   end
 end
