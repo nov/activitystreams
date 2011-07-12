@@ -13,11 +13,7 @@ JSON Activity Streams 1.0 (http://activitystrea.ms/specs/json/1.0/)
 
 == Examples
 
-=== Stream Serialization
-
-Coming Soon..
-
-=== Single Activity Serialization
+=== Single Activity
 
 You can see more examples in spec/serializations/*
 
@@ -40,6 +36,42 @@ You can see more examples in spec/serializations/*
     :published => Time.now.utc
   )
   activity.to_json
+
+=== Stream (= collection of activities)
+
+  actor = ActivityStreams::Object::Person.new(
+    :id => 'example.com/nov',
+    :display_name => 'Nov Matake'
+  )
+  stream = ActivityStreams::Stream.new(
+    :items => [
+      ActivityStreams::Activity.new(
+        :actor => actor,
+        :object => ActivityStreams::Object::Bookmark.new(
+          :url => 'http://bookmark.example.com/links/12345',
+          :target_url => 'http://example.com/articles/12345'
+        ),
+        :verb => ActivityStreams::Verb::Post.new,
+        :published => published
+      ),
+      ActivityStreams::Activity.new(
+        :actor => actor,
+        :object => ActivityStreams::Object::Place.new(
+          :display_name => 'Starbacks Coffee Shibuya',
+          :position => ActivityStreams::Object::Place::GeoLocation.new(
+            :latitude => 35.0,
+            :longitude => 140.0,
+            :altitude => 100
+          )
+        ),
+        :verb => ActivityStreams::Verb::Checkin.new,
+        :published => published
+      )
+    ],
+    :url => 'http://example.com/nov/stream',
+    :total_count => 10
+  )
+  stream.to_json
 
 == Note on Patches/Pull Requests
 

@@ -11,7 +11,8 @@ describe 'Post a Bookmark' do
   end
   let :object do
     ActivityStreams::Object::Bookmark.new(
-      :target_url => 'http://bookmark.example.com/links/12345'
+      :url => 'http://bookmark.example.com/links/12345',
+      :target_url => 'http://example.com/articles/12345'
     )
   end
   let :activity do
@@ -34,7 +35,8 @@ describe 'Post a Bookmark' do
       'published' => published.iso8601,
       'object' => {
         'objectType' => 'bookmark',
-        'targetUrl' => 'http://bookmark.example.com/links/12345'
+        'url' => 'http://bookmark.example.com/links/12345',
+        'targetUrl' => 'http://example.com/articles/12345'
       }
     }
   end
